@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>vue-data</title>
+	<style type="text/css">
+		*{
+			-webkit-user-select: none;
+			-moz-user-select: none;
+			-ms-user-select: none;
+			-o-user-select: none;
+			user-select: none;
+		}
+		img{
+			width: 100px;
+			height: 70px;
+		}
+		.list{
+			width:400px;
+			list-style: none;
+		}
+		.list h4,.list img,.list p{
+			float:left;
+		}
+	</style>
+	<script type="text/javascript" src="node_modules/vue/dist/vue.min.js"></script>
+	<script type="text/javascript" src="node_modules/axios/dist/axios.min.js"></script>
+</head>
+<body>
+	<div id="app">
+		<ul>
+			<li v-for="index in names" v-if='index != undefined'>{{index}}</li>
+		</ul>
+		<!-- <h3>{{children}}</h3> -->
+		<ul>
+			<li class="list" v-for="res in children">
+				<img v-bind:src="res.img">
+				<h4>{{res.title}}</h4>
+				<p>{{res.subscribe}}</p>
+			</li>
+		</ul>
+	</div>
+
+	<script type="text/javascript">
+		new Vue({
+			el:'#app',
+			data:{
+				names:[1,2,3,4,,6,7],
+				children:[
+					{name:'1-Jin'},
+					{name:'2-Jin'}
+				]
+			},
+			//vue自带的一个方法，可以当做一个事件的监听，监听vue实例绑定到DOM树时触发
+			mounted:function(){
+				var _this=this;
+				/*axios
+					.get('http://www.walkerup.com/essays/essaylist?pageNow=0&pageNum=5',{
+						params:{
+							pageNow:1,
+							pageNum:9
+						}
+					})
+					.then(function(response){
+						_this.children=response.data;
+					})
+					.catch(function(){
+						console.error("未请求到数据......");
+					});*/
+				axios({
+					method:'get',
+					url:'http://www.walkerup.com/essays/essaylist?pageNow=0&pageNum=5',
+				})
+				.then(function(res){
+					_this.children = res.data;
+				})
+			}
+		})
+	</script>
+
+</body>
+</html>
